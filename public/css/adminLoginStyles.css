@@ -6,6 +6,26 @@
   box-sizing: border-box;
   font-family: "Poppins" , sans-serif;
 }
+.alert {
+  padding: 10px;
+  background-color: #f44336;
+  color: white;
+  text-align: center;
+  width: 45%;
+  border-radius: 10px;
+} 
+.closebtn {
+  color: black;
+  font-weight: bold;
+  float: left;
+  font-size: 22px;
+  line-height: 20px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.closebtn:hover {
+  color: black;
+}
 body{
   min-height: 100vh;
   display: flex;
