@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const app = express();
 const port = process.env.PORT||3000;
 var db= require('./connection.js');
+const { RANDOM } = require('mysql/lib/PoolSelector');
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
@@ -100,7 +101,7 @@ app.post("/StudentLogin",function(req,res){
           var sql2 = "SELECT * from Admin WHERE email_id='"+Email+"' and Password = '"+pass+"'";
           db.query(sql2,function(err,results){
            var Cname=results[0].College_name;
-            var Ccode=results[0].College_code;
+           var Ccode=results[0].College_code;
            var Wname=results[0].Grievance_Manager;
            var Cph=results[0].Phone_no;
            var Cemail=results[0].email_id;
@@ -109,13 +110,32 @@ app.post("/StudentLogin",function(req,res){
     }
   })
  });
-app.post("/newGrievance",function(req,res){
+app.post("/status",function(req,res){
   var name= req.body.Comname;
   var room=req.body.Comroom;
-  var G_id=name+room;
+  var G_id=Math.floor((Math.random() * 101)+1);
   var cate=req.body.Comcategory;
   var usn=req.body.Comusn;
-  var sql1=`INSERT INTO Grievances VALUES ('${G_id}','${cate}','01','${usn}','${room}','12/28/2021')`;
+  var emp_id;
+  console.log(cate);
+  if(cate=="Wifi"){
+    emp_id=2;
+   }
+  else if(cate=="Eletric"){   
+    emp_id=1;
+   }
+  else if(cate=="Carpenter"){
+    emp_id=3;
+   }
+  else{
+    emp_id=4;
+   }
+  var unixTimestamp = Date.now();
+  var datex = new Date(unixTimestamp);
+  var date=datex.getDate()+"/"+(datex.getMonth()+1)+"/"+datex.getFullYear();
+  
+  var sql1=`INSERT INTO Grievances VALUES ('${G_id +room}','${cate}','${emp_id}','${usn}','${room}','${date}')`;
+
   db.query(sql1,function(error,result){
     if(error)
     {
@@ -125,7 +145,10 @@ app.post("/newGrievance",function(req,res){
       console.log(result);
     }  
   });
-  res.redirect("/status");
+  res.render("Status");
+});
+app.get("/status",function(req,res){
+     res.render("Status");
 });
 app.listen(port, function(){
   console.log("Server started on port 3000");
