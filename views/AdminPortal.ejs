@@ -33,7 +33,7 @@
             </div>
         </header>
 
-       
+
 
         <aside>
 
@@ -50,7 +50,7 @@
                     <a href=""></a>
                 </li>
 
-                
+
             </ul>
         </aside>
 
@@ -66,7 +66,7 @@
                   <p><b>Email</b> <em><%= Cemail %></em></p>
                   <p><b>Phone Number :</b> <em><%= Cph %></em></p>
                 </div>
-                
+
             </div>
 
             <div class="complaint" >
@@ -80,43 +80,37 @@
                           <tr>
                             <th scope="col">#</th>
                             <th scope="col">Grievance ID</th>
+                            <th scope="col">RoomNo</th>
+                            <th scope="col">Category</th>
+                            <th scope="col">Date</th>
                             <th scope="col">Status</th>
                           </tr>
                         </thead>
                         <tbody>
+
+                        <%  for(var i=0;i<Grecords.length;i++){ %>
                           <tr>
-                            <th scope="row">1</th>
-                            <td>L56</td>
+                            <th scope="row"><%= i+1 %></th>
+                            <td><%=Grecords[i].G_id %></td>
+                            <td><%=Grecords[i].Room_No %></td>
+                            <td><%=Grecords[i].category %></td>
+                            <td><%=Grecords[i].Request_date %></td>
                             <td><button class="btn-lg btn-primary">Resolve</button></td>
                           </tr>
-                          <tr>
-                            <th scope="row">2</th>
-                            <td>L56</td>
-                            <td><button class="btn-lg btn-primary">Resolve</button></td>
-                          </tr>
-                          <tr>
-                            <th scope="row">3</th>
-                            <td>L56</td>
-                            <td><button class="btn-lg btn-primary">Resolve</button></td>
-                          </tr>
-                          <tr>
-                            <th scope="row">3</th>
-                            <td>L56</td>
-                            <td><button class="btn-lg btn-primary">Resolve</button></td>
-                          </tr>
-                          <tr>
-                            <td>hahahahaha</td>
-                          </tr>
+
+                          <% } %>
+
+
                         </tbody>
                       </table>
                     </div>
                   </div>
-                
+
 
             </div>
-       
+
         </div>
-        
-        
+
+
     </body>
 </html>

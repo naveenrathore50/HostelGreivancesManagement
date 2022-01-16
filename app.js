@@ -1,6 +1,10 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
+const bcrypt = require('bcrypt');
+const saltRounds = 5;
+const myPlaintextPassword = '';
+const someOtherPlaintextPassword = 'not_bacon';
 const port = process.env.PORT||3000;
 var db= require('./connection.js');
 const { RANDOM } = require('mysql/lib/PoolSelector');
@@ -16,12 +20,13 @@ app.get("/",function(req,res){
 app.get("/StudentLoginSignup",function(req,res){
   res.render("StudentLogin",{message: Smessage});
 });
+app.post("/StudentLoginSignup",function(req,res){
+  res.render("StudentLogin",{message:Smessage});
+});
 app.get("/AdminLoginSignup",function(req,res){
   res.render("adminLogin",{message:Amessage});
 });
-app.post("/StudentLoginSignup",function(req,res){
-     res.render("StudentLogin",{message:Smessage});
-});
+
 app.post("/AdminLoginSignup",function(req,res){
    res.render("adminLogin",{message:Amessage});
 });
@@ -32,19 +37,23 @@ app.post("/StudentLogin",function(req,res){
   var usn=req.body.EnterUSN;
   var phone=req.body.EnterPh;
   var password= req.body.EnterPass;
-  console.log(name);
-  var sql1=`INSERT INTO student VALUES ('${usn}','${name}','${room}','${email}','${phone}','${password}')`;
-  db.query(sql1,function(error,result){
-    if(error)
-    {
-      console.log(error);
 
-    }else {
-      console.log(result);
-    }  
-  });
-  res.render("StudentLogin",{message:Smessage});
- });
+  bcrypt.hash(password, saltRounds, function(err, hash) {
+    var sql1=`INSERT INTO student VALUES ('${usn}','${name}','${room}','${email}','${phone}','${hash}')`;
+    db.query(sql1,function(error,result){
+      if(error)
+      {
+        console.log(error);
+  
+      }else {
+        console.log(result);
+      }  
+    });
+    res.render("StudentLogin",{message:Smessage});
+   });
+});
+ 
+  
  app.post("/StudentPortal",function(req,res){
       var Email= req.body.LoginEmail;
       var pass = req.body.LoginPass;
@@ -75,7 +84,8 @@ app.post("/StudentLogin",function(req,res){
   var email=req.body.EnterCemail;
   var phone=req.body.EnterCphone;
   var password= req.body.EnterCpass;
-  var sql1=`INSERT INTO Admin VALUES ('${code}','${cname}','${wname}','${email}','${phone}','${password}')`;
+  bcrypt.hash(password, saltRounds, function(err, hash) {
+  var sql1=`INSERT INTO Admin VALUES ('${code}','${cname}','${wname}','${email}','${phone}','${hash}')`;
   db.query(sql1,function(error,result){
     if(error)
     {
@@ -86,7 +96,8 @@ app.post("/StudentLogin",function(req,res){
     }  
   });
   res.render("adminLogin",{message:Amessage});
- });
+});
+});
  app.post("/AdminPortal",function(req,res){
   var Email= req.body.LoginAEmail;
   var pass = req.body.LoginAPass;
@@ -96,18 +107,38 @@ app.post("/StudentLogin",function(req,res){
       Amessage="Wrong Credentials";
       res.redirect("/AdminLoginSignup");
     }
+    // else{
+    //    Amessage='';
+    //       var sql2 = "SELECT * from Admin WHERE email_id='"+Email+"' and Password = '"+pass+"'";
+    //       db.query(sql2,function(err,results){
+    //        var Cname=results[0].College_name;
+    //        var Ccode=results[0].College_code;
+    //        var Wname=results[0].Grievance_Manager;
+    //        var Cph=results[0].Phone_no;
+    //        var Cemail=results[0].email_id;
+    //        res.render("AdminPortal",{Cname:Cname,Ccode:Ccode,Wname:Wname,Cph:Cph,Cemail:Cemail});
+    //       });  
+    // }
     else{
-       Amessage='';
-          var sql2 = "SELECT * from Admin WHERE email_id='"+Email+"' and Password = '"+pass+"'";
-          db.query(sql2,function(err,results){
-           var Cname=results[0].College_name;
-           var Ccode=results[0].College_code;
-           var Wname=results[0].Grievance_Manager;
-           var Cph=results[0].Phone_no;
-           var Cemail=results[0].email_id;
-           res.render("AdminPortal",{Cname:Cname,Ccode:Ccode,Wname:Wname,Cph:Cph,Cemail:Cemail});
-          });  
-    }
+      Amessage='';
+         var sql2 = "SELECT * from Admin WHERE email_id='"+Email+"' and Password = '"+pass+"'";
+         db.query(sql2,function(err,results){
+          var Cname=results[0].College_name;
+          var Ccode=results[0].College_code;
+          var Wname=results[0].Grievance_Manager;
+          var Cph=results[0].Phone_no;
+          var Cemail=results[0].email_id;
+
+
+          var sql_grv= "SELECT * from Grievances";
+          db.query(sql_grv,function(err,results){
+            console.log(results);
+
+            res.render("AdminPortal",{Cname:Cname,Ccode:Ccode,Wname:Wname,Cph:Cph,Cemail:Cemail,Grecords:results});
+
+        });
+        });
+       }
   })
  });
 app.post("/status",function(req,res){
