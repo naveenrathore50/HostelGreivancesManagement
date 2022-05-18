@@ -56,5 +56,5 @@ Grievances Button
 Total Grievances of college with resolve and description button 
 
 ![2022-01-27 (11)](https://user-images.githubusercontent.com/71183920/169098719-99f8f864-7353-42d0-acc6-092d90e465bb.png)
-928-990c8bae-010d-4e94-8630-71053544ffc0.png)
+
 
