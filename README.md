@@ -1,4 +1,4 @@
-# HostelGreivancesManagement
+# Warden Assistant
 
 This Project is aimed at automating the tedious manual grievance management system of the hostel. It eliminates the contact between hostel students and the administration.
  It helps to register and resolve grievances online via our portal and solve the issues by hostel warden or respective authority.
